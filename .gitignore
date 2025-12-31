@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.github/
 /out/
 
 # production
