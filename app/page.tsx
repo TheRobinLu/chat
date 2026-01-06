@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import ChatSidebar from "../components/ChatSidebar";
-import ChatMain from "../components/ChatMain";
+import ChatSidebar from "./components/ChatSidebar";
+import ChatMain from "./components/ChatMain";
 
 export default function ChatPage() {
 	return (
