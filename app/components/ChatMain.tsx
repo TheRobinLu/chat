@@ -7,19 +7,15 @@ import remarkGfm from "remark-gfm";
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-
-interface Message {
-	id?: string;
-	role: "user" | "assistant";
-	content: string;
-}
+import { IChat, IMessage } from "@/interface";
 
 export default function ChatMain() {
-	const [messages, setMessages] = React.useState<Message[]>([]);
+	const [messages, setMessages] = React.useState<IMessage[]>([]);
 	const [input, setInput] = React.useState("");
 	const [isLoading, setIsLoading] = React.useState(false);
 	const [searching, setSearching] = React.useState(false);
 	const [thinking, setThinking] = React.useState(false);
+	const [chat, setChat] = React.useState<IChat | null>(null);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
@@ -28,10 +24,17 @@ export default function ChatMain() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!input.trim()) return;
-		const userMsg: Message = {
+		const userMsg: IMessage = {
 			role: "user",
 			content: input,
 		};
+
+		if (messages.length === 0) {
+			userMsg.content =
+				"You are a helpful AI assistant. generate a topic to this conversation " +
+				" with formated as 'Topic: <topic>'.\n\n" +
+				userMsg.content;
+		}
 		setMessages((prev) => [...prev, userMsg]);
 		setInput("");
 		setIsLoading(true);
@@ -51,7 +54,7 @@ export default function ChatMain() {
 		}
 
 		const reader = res.body.getReader();
-		let assistantMsg: Message = { role: "assistant", content: "" };
+		let assistantMsg: IMessage = { role: "assistant", content: "" };
 		setMessages((prev) => [...prev, assistantMsg]);
 		let done = false;
 		while (!done) {
@@ -75,6 +78,15 @@ export default function ChatMain() {
 				});
 			}
 		}
+		if (messages.length === 0) {
+			const topicMatch = assistantMsg.content.match(/Topic:\s*(.+)/);
+			const topic = topicMatch ? topicMatch[1].trim() : "New Chat";
+			setChat({
+				topic,
+				createDate: new Date().toISOString(),
+				messages: [...messages, assistantMsg],
+			});
+		}
 		setIsLoading(false);
 	};
 
@@ -90,7 +102,7 @@ export default function ChatMain() {
 				<div className="space-y-3">
 					{messages.map((msg, idx) => (
 						<div
-							key={msg.id || idx}
+							key={idx}
 							className={msg.role === "user" ? "text-right" : "text-left"}
 						>
 							<div
