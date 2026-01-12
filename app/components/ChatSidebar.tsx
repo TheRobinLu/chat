@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { HiPlus } from "react-icons/hi";
 import { IChat, IMessage } from "../../interface";
 import ChatItem from "./ChatItem";
@@ -68,7 +69,13 @@ export default function ChatSidebar({ onNewChat }: ChatSidebarProps) {
 	return (
 		<div className="flex h-screen flex-col p-4">
 			<div className="mb-4 flex items-center justify-between">
-				<h2 className="text-lg font-semibold">Chats</h2>
+				<Image
+					src="/chaticon.jpg"
+					alt="Chats"
+					width={96}
+					height={96}
+					className="h-12 w-auto rounded"
+				/>
 				<button
 					onClick={handleNew}
 					className="flex items-center gap-2 rounded bg-black/90 px-3 py-2 text-white"
