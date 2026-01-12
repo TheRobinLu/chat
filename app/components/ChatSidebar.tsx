@@ -1,13 +1,68 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HiPlus } from "react-icons/hi";
+import { IChat, IMessage } from "../../interface";
 import ChatItem from "./ChatItem";
 
-export default function ChatSidebar() {
-	const [chats, setChats] = useState<string[]>(["Welcome"]);
+const DEFAULT_CHAT: IChat = {
+	topic: "Welcome",
+	createDate: "welcome",
+	messages: [],
+};
+
+function isValidMessage(msg: unknown): msg is IMessage {
+	if (!msg || typeof msg !== "object") return false;
+	const m = msg as Record<string, unknown>;
+	return (
+		(m.role === "user" || m.role === "assistant" || m.role === "system") &&
+		typeof m.content === "string"
+	);
+}
+
+function isValidChat(chat: unknown): chat is IChat {
+	if (!chat || typeof chat !== "object") return false;
+	const c = chat as Record<string, unknown>;
+	return (
+		typeof c.topic === "string" &&
+		typeof c.createDate === "string" &&
+		Array.isArray(c.messages) &&
+		c.messages.every(isValidMessage)
+	);
+}
+
+type ChatSidebarProps = {
+	onNewChat?: () => void;
+};
+
+const STORAGE_KEY = "chatHistory";
+
+function loadChats(): IChat[] {
+	if (typeof window === "undefined") return [DEFAULT_CHAT];
+	const raw = localStorage.getItem(STORAGE_KEY);
+	if (!raw) return [DEFAULT_CHAT];
+	try {
+		const parsed = JSON.parse(raw);
+		if (Array.isArray(parsed)) {
+			const validChats = parsed.filter(isValidChat);
+			if (validChats.length) return validChats;
+		}
+	} catch (error) {
+		console.error("Failed to load chat history", error);
+	}
+	return [DEFAULT_CHAT];
+}
+
+export default function ChatSidebar({ onNewChat }: ChatSidebarProps) {
+	const [chats, setChats] = useState<IChat[]>([DEFAULT_CHAT]);
+
+	useEffect(() => {
+		const nextChats = loadChats();
+		setChats(nextChats);
+	}, []);
 
 	function handleNew() {
-		setChats((s) => ["New chat", ...s]);
+		onNewChat?.();
 	}
 
 	return (
@@ -24,8 +79,11 @@ export default function ChatSidebar() {
 			</div>
 
 			<div className="flex-1 overflow-auto space-y-2">
-				{chats.map((c, i) => (
-					<ChatItem key={`${c}-${i}`} title={c} />
+				{chats.map((chat, i) => (
+					<ChatItem
+						key={`${chat.createDate}-${i}`}
+						title={chat.topic || "Untitled"}
+					/>
 				))}
 			</div>
 		</div>
