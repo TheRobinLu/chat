@@ -2,6 +2,7 @@ export interface IChat {
 	topic: string;
 	createDate: string;
 	messages: Array<IMessage>;
+	updateDate?: string;
 }
 
 export interface IMessage {

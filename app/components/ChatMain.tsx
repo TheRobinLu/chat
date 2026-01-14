@@ -11,39 +11,46 @@ import { IChat, IMessage } from "@/interface";
 
 type ChatMainProps = {
 	resetSignal: number;
+	selectedChatId: string | null;
 };
 
-type ChatHistoryPayload = IChat[];
+type ChatHistoryPayload = (IChat & { updateDate?: string })[];
 
 const STORAGE_KEY = "chatHistory";
 
-export default function ChatMain({ resetSignal }: ChatMainProps) {
+export default function ChatMain({
+	resetSignal,
+	selectedChatId,
+}: ChatMainProps) {
 	const [messages, setMessages] = React.useState<IMessage[]>([]);
 	const [input, setInput] = React.useState("");
 	const [isLoading, setIsLoading] = React.useState(false);
 	const [searching, setSearching] = React.useState(false);
 	const [thinking, setThinking] = React.useState(false);
 	const [chat, setChat] = React.useState<IChat | null>(null);
-	const [chatTopic, setChatTopic] = React.useState("New Chat");
+	const [chatTopic, setChatTopic] = React.useState("");
 	const [chatHistory, setChatHistory] = React.useState<ChatHistoryPayload>([]);
 
 	const upsertChatHistory = React.useCallback((updatedChat: IChat) => {
-		setChat(updatedChat);
+		const stampedChat: IChat & { updateDate: string } = {
+			...updatedChat,
+			updateDate: new Date().toISOString(),
+		};
+		setChat(stampedChat);
 		setChatHistory((prev) => {
 			const idx = prev.findIndex(
-				(c) => c.createDate === updatedChat.createDate
+				(c) => c.createDate === stampedChat.createDate
 			);
-			if (idx === -1) return [...prev, updatedChat];
+			if (idx === -1) return [...prev, stampedChat];
 			const next = [...prev];
-			next[idx] = updatedChat;
+			next[idx] = stampedChat;
 			return next;
 		});
 	}, []);
 
 	React.useEffect(() => {
-		setChatTopic("New Chat");
+		setChatTopic("");
 		const stored = localStorage.getItem(STORAGE_KEY);
-
 		if (!stored) return;
 		try {
 			const parsed: ChatHistoryPayload = JSON.parse(stored) ?? [];
@@ -51,10 +58,27 @@ export default function ChatMain({ resetSignal }: ChatMainProps) {
 			const latest = parsed[parsed.length - 1];
 			if (latest) {
 				setChat(latest);
+				setChatTopic(latest.topic ?? "New Chat");
 				setMessages(latest.messages ?? []);
 			}
 		} catch {}
 	}, []);
+
+	React.useEffect(() => {
+		if (!selectedChatId) return;
+		const stored = localStorage.getItem(STORAGE_KEY);
+		if (!stored) return;
+		try {
+			const parsed: ChatHistoryPayload = JSON.parse(stored) ?? [];
+			setChatHistory(parsed);
+			const target = parsed.find((c) => c.createDate === selectedChatId);
+			if (target) {
+				setChat(target);
+				setChatTopic(target.topic ?? "New Chat");
+				setMessages(target.messages ?? []);
+			}
+		} catch {}
+	}, [selectedChatId]);
 
 	React.useEffect(() => {
 		setMessages([]);
@@ -63,7 +87,8 @@ export default function ChatMain({ resetSignal }: ChatMainProps) {
 		setSearching(false);
 		setThinking(false);
 		setChat(null);
-		setChatHistory([]);
+		setChatTopic("");
+		// keep chatHistory so past chats remain selectable
 	}, [resetSignal]);
 
 	React.useEffect(() => {
