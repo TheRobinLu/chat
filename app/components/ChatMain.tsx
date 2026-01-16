@@ -186,6 +186,7 @@ export default function ChatMain({
 			const newChat: IChat = {
 				topic: topicText,
 				createDate,
+				updateDate: createDate,
 				messages: updatedMessages,
 			};
 			upsertChatHistory(newChat);
@@ -195,6 +196,7 @@ export default function ChatMain({
 			const updatedChat: IChat = {
 				topic: topicText,
 				createDate,
+				updateDate: new Date().toISOString(),
 				messages: updatedMessages,
 			};
 			upsertChatHistory(updatedChat);
