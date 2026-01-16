@@ -89,7 +89,7 @@ export default function ChatSidebar({
 		<div className="flex h-screen flex-col p-4">
 			<div className="mb-4 flex items-center justify-between">
 				<Image
-					src="/chaticon.jpg"
+					src="/chatIcon.jpg"
 					alt="Chats"
 					width={96}
 					height={96}
