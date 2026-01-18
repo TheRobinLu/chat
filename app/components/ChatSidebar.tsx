@@ -86,36 +86,41 @@ export default function ChatSidebar({
 	}
 
 	return (
-		<div className="flex h-full flex-col p-4">
-			<div className="mb-4 flex items-center justify-between gap-2">
-				<Image
-					src="/chatIcon.jpg"
-					alt="Chats"
-					width={96}
-					height={96}
-					className="h-12 w-auto rounded"
-				/>
-				<button
-					onClick={handleNew}
-					className="flex items-center gap-2 rounded bg-black/90 px-3 py-2 text-white"
-				>
-					<HiPlus />
-					<span className="hidden sm:inline">New Chat</span>
-				</button>
+		<div className="flex h-full flex-col gap-4 p-4 text-slate-100">
+			<div className="glass-panel neon-border rounded-2xl border border-white/10 p-4 shadow-lg">
+				<div className="flex items-center justify-between gap-2">
+					<div className="flex items-center gap-3">
+						<Image
+							src="/chatIcon.jpg"
+							alt="Chats"
+							width={96}
+							height={96}
+							className="h-12 w-auto rounded-md border border-white/10 shadow"
+						/>
+						<div>
+							<h2 className="text-lg font-semibold text-slate-50">Lulu Chat</h2>
+						</div>
+					</div>
+					<button
+						onClick={handleNew}
+						className="button-primary whitespace-nowrap"
+					>
+						<HiPlus />
+						<span className="hidden sm:inline">New Chat</span>
+					</button>
+				</div>
 			</div>
 
-			<div className="flex-1 space-y-2 overflow-auto">
-				{chats.map((chat, i) => (
-					<button
-						type="button"
-						key={`${chat.createDate}-${i}`}
-						onClick={() => handleSelect(chat.createDate)}
-						className="w-full text-left"
-					>
-						<ChatItem title={chat.topic || "Untitled"} />
-					</button>
-				))}
-			</div>
+			{chats.map((chat, i) => (
+				<button
+					type="button"
+					key={`${chat.createDate}-${i}`}
+					onClick={() => handleSelect(chat.createDate)}
+					className="block w-full text-left transition hover:translate-x-1"
+				>
+					<ChatItem title={chat.topic || "Untitled"} />
+				</button>
+			))}
 		</div>
 	);
 }

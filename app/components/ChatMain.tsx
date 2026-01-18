@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import { HiMenuAlt2 } from "react-icons/hi";
+import { HiMenuAlt2, HiSearch, HiLightningBolt } from "react-icons/hi";
 import { IChat, IMessage } from "@/interface";
 
 type ChatMainProps = {
@@ -209,101 +209,119 @@ export default function ChatMain({
 	};
 
 	return (
-		<div className="flex h-full min-h-[70vh] flex-col bg-white">
-			<div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 lg:px-6">
-				<div className="flex items-center gap-3">
-					<button
-						type="button"
-						onClick={() => onOpenSidebar?.()}
-						className="inline-flex items-center gap-2 rounded border border-gray-200 bg-white px-2 py-2 text-gray-700 shadow-sm transition hover:border-gray-300 hover:text-black lg:hidden"
-					>
-						<HiMenuAlt2 className="h-5 w-5" />
-						<span className="sr-only">Open chats</span>
-					</button>
-					<h3 className="text-lg font-semibold">{chatTopic}</h3>
+		<div className="flex h-full min-h-[70vh] flex-col px-2 lg:px-3">
+			<div className="glass-strong neon-border flex h-full flex-col rounded-xl border border-white/16">
+				<div className="flex items-start justify-between border-b border-white/12 bg-white/10 px-4 py-4 lg:px-6">
+					<div className="flex items-center gap-3">
+						<button
+							type="button"
+							onClick={() => onOpenSidebar?.()}
+							className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-slate-100 shadow-sm transition hover:border-white/40 hover:bg-white/20 lg:hidden"
+						>
+							<HiMenuAlt2 className="h-5 w-5" />
+							<span className="sr-only">Open chats</span>
+						</button>
+						<div>
+							<h3 className="text-xl font-semibold text-slate-50">
+								{chatTopic || "New Transmission"}
+							</h3>
+						</div>
+					</div>
+					<div className="flex flex-wrap items-center gap-1">
+						<button
+							type="button"
+							onClick={() => setSearching((v) => !v)}
+							className={`pill-toggle ${searching ? "is-active" : ""}`}
+						>
+							<HiSearch className="h-4 w-4" />
+							<span>Search</span>
+						</button>
+						<button
+							type="button"
+							onClick={() => setThinking((v) => !v)}
+							className={`pill-toggle ${thinking ? "is-active" : ""}`}
+						>
+							<HiLightningBolt className="h-4 w-4" />
+							<span>Thinking</span>
+						</button>
+					</div>
 				</div>
-			</div>
 
-			<div className="flex-1 overflow-y-auto px-4 py-4 lg:px-6">
-				<div className="mx-auto w-full max-w-3xl space-y-3">
-					{messages
-						.filter((msg) => msg.role !== "system")
-						.map((msg, idx) => (
-							<div
-								key={idx}
-								className={msg.role === "user" ? "text-right" : "text-left"}
-							>
+				<div className="flex-1 overflow-y-auto p-2">
+					<div className="mx-auto w-full space-y-4">
+						{messages
+							.filter((msg) => msg.role !== "system")
+							.map((msg, idx) => (
 								<div
+									key={idx}
 									className={
 										msg.role === "user"
-											? "inline-block max-w-full rounded bg-blue-500 px-3 py-2 text-white"
-											: "inline-block max-w-full rounded bg-gray-200 px-3 py-2 text-gray-900"
+											? "flex justify-end"
+											: "flex justify-start"
 									}
 								>
-									<ReactMarkdown
-										remarkPlugins={[remarkGfm, remarkMath]}
-										rehypePlugins={[rehypeKatex]}
+									<div
+										className={`max-w-full rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm backdrop-blur ${
+											msg.role === "user"
+												? "message-user text-slate-50"
+												: "message-assistant text-slate-100"
+										}`}
 									>
-										{msg.content}
-									</ReactMarkdown>
+										<ReactMarkdown
+											remarkPlugins={[remarkGfm, remarkMath]}
+											rehypePlugins={[rehypeKatex]}
+										>
+											{msg.content}
+										</ReactMarkdown>
+									</div>
 								</div>
+							))}
+						{isLoading && (
+							<div className="flex justify-start">
+								<span className="message-assistant inline-block rounded-2xl px-4 py-3 text-sm text-slate-100 animate-pulse">
+									Generating...
+								</span>
 							</div>
-						))}
-					{isLoading && (
-						<div className="text-left">
-							<span className="inline-block rounded bg-gray-200 px-3 py-2 text-gray-900 animate-pulse">
-								...
-							</span>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
-			</div>
 
-			<form
-				onSubmit={handleSubmit}
-				className="border-t bg-white px-4 py-4 lg:px-6"
-			>
-				<div className="mx-auto flex w-full max-w-3xl flex-col gap-3 sm:flex-row">
-					<input
-						value={input}
-						onChange={handleInputChange}
-						className="flex-1 rounded border px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-200"
-						placeholder="Type a message"
-						disabled={isLoading}
-					/>
-					<button
-						type="submit"
-						className="rounded bg-black/90 px-4 py-2 text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-70"
-						disabled={isLoading}
-					>
-						Send
-					</button>
-				</div>
-				<div className="mx-auto mt-3 flex w-full max-w-3xl gap-2">
-					<button
-						type="button"
-						onClick={() => setSearching((v) => !v)}
-						className={`w-full rounded px-4 py-2 text-white transition-colors sm:w-auto ${
-							searching
-								? "bg-blue-600 hover:bg-blue-700"
-								: "bg-gray-300 text-gray-700 hover:bg-blue-500 hover:text-white"
-						}`}
-					>
-						Search
-					</button>
-					<button
-						type="button"
-						onClick={() => setThinking((v) => !v)}
-						className={`w-full rounded px-4 py-2 text-white transition-colors sm:w-auto ${
-							thinking
-								? "bg-green-600 hover:bg-green-700"
-								: "bg-gray-300 text-gray-700 hover:bg-green-500 hover:text-white"
-						}`}
-					>
-						Thinking
-					</button>
-				</div>
-			</form>
+				<form
+					onSubmit={handleSubmit}
+					className="border-t border-white/12 bg-white/10 px-4 py-5 backdrop-blur lg:px-8"
+				>
+					<div className="mx-auto flex w-full max-w-3xl flex-col gap-3 sm:flex-row">
+						<input
+							value={input}
+							onChange={handleInputChange}
+							className="input-cyber"
+							placeholder="Type a message to the alloy core..."
+							disabled={isLoading}
+						/>
+						<button
+							type="submit"
+							className="button-primary min-w-[120px] disabled:cursor-not-allowed disabled:opacity-70"
+							disabled={isLoading}
+						>
+							Send
+						</button>
+					</div>
+					<div className="mx-auto mt-3 flex w-full max-w-3xl flex-wrap gap-2">
+						{searching && (
+							<span className="pill-toggle is-active">
+								<HiSearch className="h-4 w-4" />
+								<span>Search mode</span>
+							</span>
+						)}
+						{thinking && (
+							<span className="pill-toggle is-active">
+								<HiLightningBolt className="h-4 w-4" />
+								<span>Thinking</span>
+							</span>
+						)}
+					</div>
+				</form>
+			</div>
 		</div>
 	);
 }

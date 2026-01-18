@@ -28,9 +28,16 @@ export default function ChatPage() {
 	const closeSidebar = () => setIsSidebarOpen(false);
 
 	return (
-		<div className="flex min-h-screen flex-col bg-gray-50">
-			<div className="relative flex w-full flex-1">
-				<aside className="hidden w-80 shrink-0 border-r border-gray-200 bg-white dark:border-gray-800 lg:flex">
+		<div className="relative flex min-h-screen flex-col overflow-hidden">
+			<div
+				className="pointer-events-none absolute inset-0 opacity-50"
+				aria-hidden
+			>
+				<div className="hero-accent absolute inset-0 blur-3xl" />
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(78,161,255,0.12),transparent_40%),radial-gradient(circle_at_90%_10%,rgba(76,230,200,0.12),transparent_32%)]" />
+			</div>
+			<div className="relative z-10 flex w-full flex-1">
+				<aside className="glass-panel neon-border hidden w-80 shrink-0 border border-white/10 lg:flex">
 					<ChatSidebar
 						onNewChat={handleNewChat}
 						onSelectChat={handleSelectChat}
@@ -39,12 +46,12 @@ export default function ChatPage() {
 
 				{isSidebarOpen && (
 					<div
-						className="fixed inset-0 z-40 flex lg:hidden"
+						className="fixed inset-0 z-40 flex backdrop-blur-sm lg:hidden"
 						onClick={closeSidebar}
 					>
-						<div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+						<div className="absolute inset-0 bg-black/70" />
 						<aside
-							className="relative z-50 h-full w-72 max-w-[85vw] border-r border-gray-200 bg-white shadow-xl"
+							className="relative z-50 h-full w-72 max-w-[85vw] glass-strong neon-border"
 							onClick={(e) => e.stopPropagation()}
 						>
 							<ChatSidebar

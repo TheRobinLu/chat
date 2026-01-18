@@ -14,13 +14,13 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 	if (!isOpen) return null;
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-			<div className="bg-white p-6 rounded-lg max-w-[90%] md:max-w-[640px] relative">
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur">
+			<div className="glass-strong neon-border relative max-w-[90%] rounded-2xl border border-white/12 p-6 text-slate-100 shadow-lg md:max-w-[720px]">
 				<button
 					type="button"
 					onClick={onClose}
 					aria-label="Close"
-					className="absolute right-3 top-3 inline-flex items-center justify-center h-8 w-8 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 shadow-sm"
+					className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/10 text-slate-100 transition hover:border-white/30 hover:bg-white/20"
 				>
 					<svg
 						className="h-4 w-4"
@@ -36,30 +36,30 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 					</svg>
 				</button>
 
-				<h2 className="text-lg font-bold text-center mb-6">
+				<h2 className="mb-4 text-center text-lg font-bold">
 					Your donation helps cover development and maintenance costs, keeping
 					the app running while enabling new features and apps.
 				</h2>
-				<h2 className="text-lg font-bold text-center mb-6">
+				<h2 className="mb-6 text-center text-lg font-bold">
 					您的捐赠有助于支付开发和维护成本，
 					使应用持续运行，同时推动新功能及新应用的开发。
 				</h2>
 
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					{/* QR Code Section */}
 					<div className="space-y-6">
-						<div className="text-center">
-							<h3 className="font-semibold mb-2">WeChat Pay</h3>
+						<div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+							<h3 className="mb-2 font-semibold text-slate-50">WeChat Pay</h3>
 							<Image
 								src="/donate/wechatQR.png"
 								alt="WeChat Pay QR"
 								width={200}
 								height={200}
-								className="mx-auto"
+								className="mx-auto rounded-lg border border-white/10 bg-white/5 p-2 shadow"
 							/>
 						</div>
-						<div className="text-center">
-							<h3 className="font-semibold mb-2">Alipay</h3>
+						<div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+							<h3 className="mb-2 font-semibold text-slate-50">Alipay</h3>
 							<Image
 								src="/donate/AlipayQR.png"
 								alt="Alipay QR"
@@ -72,8 +72,10 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 
 					{/* Other Payment Methods */}
 					<div className="space-y-6">
-						<div className="text-center">
-							<h3 className="font-semibold mb-2">Buy Me a Coffee</h3>
+						<div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+							<h3 className="mb-2 font-semibold text-slate-50">
+								Buy Me a Coffee
+							</h3>
 							<Image
 								src="/donate/BuyMeCoffeeQR.png"
 								alt="Buy Me a Coffee QR"
@@ -82,19 +84,21 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 								className="mx-auto"
 							/>
 						</div>
-						<div className="text-center p-4 bg-gray-50 rounded-lg">
-							<h3 className="font-semibold mb-2">EMT (Email Money Transfer)</h3>
-							<p className="text-gray-600 break-all">
+						<div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+							<h3 className="mb-2 font-semibold text-slate-50">
+								EMT (Email Money Transfer)
+							</h3>
+							<p className="break-all text-slate-200">
 								lulu.talking@outlook.com
 							</p>
 						</div>
 					</div>
 				</div>
 
-				<p className="text-center text-gray-600 mt-6">
+				<p className="mt-6 text-center text-slate-300">
 					Thank you for supporting our AI Chat project!
 				</p>
-				<p className="text-center text-gray-600 mt-6">
+				<p className="mt-2 text-center text-slate-300">
 					感谢您为支持我们的 AI Chat 项目提供的赞助！
 				</p>
 			</div>
