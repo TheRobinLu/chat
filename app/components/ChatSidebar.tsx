@@ -52,7 +52,7 @@ function loadChats(): ChatWithMeta[] {
 			const validChats = parsed.filter(isValidChat);
 			if (validChats.length)
 				return [...validChats].sort(
-					(a, b) => getSortableTime(b) - getSortableTime(a)
+					(a, b) => getSortableTime(b) - getSortableTime(a),
 				);
 		}
 	} catch (error) {
@@ -86,8 +86,8 @@ export default function ChatSidebar({
 	}
 
 	return (
-		<div className="flex h-screen flex-col p-4">
-			<div className="mb-4 flex items-center justify-between">
+		<div className="flex h-full flex-col p-4">
+			<div className="mb-4 flex items-center justify-between gap-2">
 				<Image
 					src="/chatIcon.jpg"
 					alt="Chats"
@@ -100,11 +100,11 @@ export default function ChatSidebar({
 					className="flex items-center gap-2 rounded bg-black/90 px-3 py-2 text-white"
 				>
 					<HiPlus />
-					New Chat
+					<span className="hidden sm:inline">New Chat</span>
 				</button>
 			</div>
 
-			<div className="flex-1 overflow-auto space-y-2">
+			<div className="flex-1 space-y-2 overflow-auto">
 				{chats.map((chat, i) => (
 					<button
 						type="button"

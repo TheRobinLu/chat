@@ -2,9 +2,11 @@
 
 import * as React from "react";
 import { DonationModal } from "./DonationModal";
+import packageJson from "../../package.json";
 
 export default function Footer() {
 	const [isDonateOpen, setIsDonateOpen] = React.useState(false);
+	const appVersion = packageJson.version ?? "";
 
 	return (
 		<>
@@ -13,7 +15,9 @@ export default function Footer() {
 				onClose={() => setIsDonateOpen(false)}
 			/>
 			<footer className="flex flex-col items-center gap-2 border-t border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 sm:flex-row sm:justify-between">
-				<span className="font-medium">© 2026 LuluTalking Inc • v1.0.0</span>
+				<span className="font-medium">
+					© 2026 LuluTalking Inc • v{appVersion}
+				</span>
 				<div className="flex items-center gap-3">
 					<button
 						type="button"
