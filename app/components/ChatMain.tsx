@@ -209,7 +209,7 @@ export default function ChatMain({
 	};
 
 	return (
-		<div className="flex h-full min-h-[70vh] flex-col px-2 lg:px-3">
+		<div className="flex h-full min-h-[70vh] flex-col px-2">
 			<div className="glass-strong neon-border flex h-full flex-col rounded-xl border border-white/16">
 				<div className="flex items-start justify-between border-b border-white/12 bg-white/10 px-4 py-4 lg:px-6">
 					<div className="flex items-center gap-3">
@@ -288,7 +288,7 @@ export default function ChatMain({
 
 				<form
 					onSubmit={handleSubmit}
-					className="border-t border-white/12 bg-white/10 px-4 py-5 backdrop-blur lg:px-8"
+					className="border-t border-white/12 bg-white/10 px-4 py-3 backdrop-blur lg:px-8"
 				>
 					<div className="mx-auto flex w-full max-w-3xl flex-col gap-3 sm:flex-row">
 						<input
@@ -306,7 +306,7 @@ export default function ChatMain({
 							Send
 						</button>
 					</div>
-					<div className="mx-auto mt-3 flex w-full max-w-3xl flex-wrap gap-2">
+					<div className="mx-auto mt-1 flex w-full max-w-3xl flex-wrap gap-2">
 						{searching && (
 							<span className="pill-toggle is-active">
 								<HiSearch className="h-4 w-4" />

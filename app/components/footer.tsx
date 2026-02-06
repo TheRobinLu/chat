@@ -14,7 +14,7 @@ export default function Footer() {
 				isOpen={isDonateOpen}
 				onClose={() => setIsDonateOpen(false)}
 			/>
-			<footer className="glass-panel neon-border mt-6 flex flex-col items-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-sm text-slate-200 backdrop-blur sm:flex-row sm:justify-between">
+			<footer className="glass-panel neon-border mt-2 flex flex-col items-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-sm text-slate-200 backdrop-blur sm:flex-row sm:justify-between">
 				<span className="font-medium tracking-wide">
 					© 2026 LuluTalking Inc • v{appVersion}
 				</span>
